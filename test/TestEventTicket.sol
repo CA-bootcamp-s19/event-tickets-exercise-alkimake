@@ -32,12 +32,8 @@ contract TestEventTicket {
 	string description = "description";
 	string url = "URL";
 	uint ticketNumber = 100;
-	EventTickets myEvent;
+	EventTickets myEvent = new EventTickets(description, url, ticketNumber);
     uint ticketPrice = 100 wei;
-
-	function beforeEach() public {
-		myEvent = new EventTickets(description, url, ticketNumber);
-	}
 
 	function testSelf() public {
 		Assert.equal(address(this).balance, 1 ether, 'not enough balance to test');
