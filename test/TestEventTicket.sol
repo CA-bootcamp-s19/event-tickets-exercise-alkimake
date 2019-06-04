@@ -38,8 +38,12 @@ contract TestEventTicket {
 	string description = "description";
 	string url = "URL";
 	uint ticketNumber = 100;
-	EventTickets myEvent = new EventTickets(description, url, ticketNumber);
+	EventTickets myEvent;
 	uint ticketPrice = 100 wei;
+
+	function beforeEach() public {
+		myEvent = new EventTickets(description, url, ticketNumber);
+	}
 
 	function testSelf() public {
 		Assert.equal(address(this).balance, 1 ether, 'not enough balance to test');
@@ -71,6 +75,10 @@ contract TestEventTicket {
 		EventTickets(address(throwproxy)).buyTickets(1);
 		bool r = throwproxy.execute(ticketPrice - 1);
 		Assert.isFalse(r, "Buy Ticket should throw an error when there is not enough fund!");
+	}
+
+	function afterEach() public {
+		myEvent.endSale();
 	}
 
 	function() external payable {
