@@ -7,22 +7,22 @@ import "../contracts/EventTicketsV2.sol";
 
 // Proxy contract for testing throws
 contract ThrowProxy {
-  address public target;
-  bytes data;
+	address public target;
+	bytes data;
 
-  constructor(address _target) internal {
-    target = _target;
-  }
+	constructor(address _target) internal {
+		target = _target;
+	}
 
-  //prime the data using the fallback function.
-  function() external {
-    data = msg.data;
-  }
+	//prime the data using the fallback function.
+	function() external {
+		data = msg.data;
+	}
 
-  function execute() external returns (bool) {
-    (bool r, ) = target.call(data);
-	return r;
-  }
+	function execute() external returns (bool) {
+		(bool r, ) = target.call(data);
+		return r;
+	}
 }
 
 contract TestEventTicket {
@@ -60,7 +60,7 @@ contract TestEventTicket {
 		Assert.equal(sales, 1, 'the ticket sales should be 1');
 	}
 
-  function() external payable {
-  }
+	function() external payable {
+	}
 
 }
