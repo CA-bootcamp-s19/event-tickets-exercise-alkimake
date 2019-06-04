@@ -33,7 +33,7 @@ contract TestEventTicket {
 	string url = "URL";
 	uint ticketNumber = 100;
 	EventTickets myEvent = new EventTickets(description, url, ticketNumber);
-    uint ticketPrice = 100 wei;
+	uint ticketPrice = 100 wei;
 
 	function testSelf() public {
 		Assert.equal(address(this).balance, 1 ether, 'not enough balance to test');
@@ -54,10 +54,13 @@ contract TestEventTicket {
 		Assert.equal(sales, 0, "the ticket sales should be 0");
 	}
 
-	function testBuyTickets() public {
+	function testBuyTickets() public payable {
 		myEvent.buyTickets.value(ticketPrice)(1);
 		(, , , uint sales, ) = myEvent.readEvent();
 		Assert.equal(sales, 1, 'the ticket sales should be 1');
 	}
+
+  function() external payable {
+  }
 
 }
