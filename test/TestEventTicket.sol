@@ -10,7 +10,7 @@ contract ThrowProxy {
 	address public target;
 	bytes data;
 
-	constructor(address _target) internal {
+	constructor(address _target) public {
 		target = _target;
 	}
 
@@ -23,6 +23,12 @@ contract ThrowProxy {
 		(bool r, ) = target.call(data);
 		return r;
 	}
+
+	function execute(uint val) external returns (bool) {
+		(bool r, ) = target.call.value(val)(data);
+		return r;
+	}
+
 }
 
 contract TestEventTicket {
@@ -58,6 +64,13 @@ contract TestEventTicket {
 		myEvent.buyTickets.value(ticketPrice)(1);
 		(, , , uint sales, ) = myEvent.readEvent();
 		Assert.equal(sales, 1, 'the ticket sales should be 1');
+	}
+
+	function testBuyTicketsShouldGiveExceptionWhenNotEnoughFund() public {
+		ThrowProxy throwproxy = new ThrowProxy(address(myEvent));
+		EventTickets(address(throwproxy)).buyTickets(1);
+		bool r = throwproxy.execute(ticketPrice - 1);
+		Assert.isFalse(r, "Buy Ticket should throw an error when there is not enough fund!");
 	}
 
 	function() external payable {
